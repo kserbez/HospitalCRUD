@@ -1,0 +1,13 @@
+@API_HostAddress = http://localhost:5282
+
+GET {{API_HostAddress}}/Patients/
+Accept: application/json
+
+###
+
+
+GET {{API_HostAddress}}/Patients/
+Accept: application/json
+
+
+###
