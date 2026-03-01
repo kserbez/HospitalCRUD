@@ -1,4 +1,4 @@
-﻿namespace Hospital.API.Entities
+﻿namespace API.Data.Entities
 {
     public class PatientDepartmentAssignment
     {

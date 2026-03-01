@@ -1,4 +1,4 @@
-﻿namespace Hospital.API.Services
+﻿namespace API.Services
 {
     public interface IHospitalService
     {

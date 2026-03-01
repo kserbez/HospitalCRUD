@@ -2,9 +2,9 @@ using System;
 using Microsoft.AspNetCore.Mvc;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-using Hospital.API.DTOs;
+using API.DTOs;
 
-namespace Hospital.API.Controllers
+namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

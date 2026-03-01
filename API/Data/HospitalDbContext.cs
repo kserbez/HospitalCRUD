@@ -1,7 +1,7 @@
-﻿using Hospital.API.Entities;
+﻿using API.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Hospital.API.Data
+namespace API.Data
 {
     public class HospitalDbContext : DbContext
     {

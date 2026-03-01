@@ -1,4 +1,4 @@
-﻿namespace Hospital.API.DTOs
+﻿namespace API.DTOs
 {
     public class DepartmentDTO
     {
