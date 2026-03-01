@@ -9,13 +9,20 @@ Implement required CRUD operations + transfer functionality + historical query (
 
 ## Quick Start
 
-1. Clone the repo  
+1. Clone the repo and go to the solution folder
     ```bash
     git clone <repository-url>
-    cd ./hospital/api
+    cd ./Hospital/API
 
-2. Run the project
-
+2. Restore the project
     ```bash
     dotnet restore
-    dotnet run --project src/Web
+
+2. Run database migrations and initial data population
+    ```bash
+	dotnet ef database update
+
+3. Run the project
+
+    ```bash
+    dotnet run
