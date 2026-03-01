@@ -9,6 +9,9 @@ namespace API.Data
         public DbSet<Department> Departments => Set<Department>();
         public DbSet<PatientDepartmentAssignment> PatientDepartmentAssignments => Set<PatientDepartmentAssignment>();
 
+        public HospitalDbContext(DbContextOptions<HospitalDbContext> options)
+        : base(options) { }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
