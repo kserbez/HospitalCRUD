@@ -3,10 +3,10 @@
     public class Patient
     {
         public string AdmissionNumber { get; private set; } = null!;  // PK
-        public string PatientName { get; private set; } = null!;
+        public string PatientName { get; set; } = null!;
 
         // ?? todo
-        public int? CurrentDepartmentId { get; private set; }
+        public int? CurrentDepartmentId { get; set; }
         public Department? CurrentDepartment { get; private set; }
 
         // 1 to many

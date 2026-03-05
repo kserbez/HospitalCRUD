@@ -1,9 +1,8 @@
-namespace API.DTOs
+﻿namespace API.DTOs;
+public class PatientDto
 {
-    public class PatientDTO
-    {
-        public string PatientName { get; set; }
-
-        public string? AdmissionNumber { get; set; }
-    }
+    public string AdmissionNumber { get; set; } = null!;
+    public string PatientName { get; set; } = null!;
+    public string? CurrentDepartmentShortName { get; set; }
+    public int? CurrentDepartmentId { get; set; }
 }

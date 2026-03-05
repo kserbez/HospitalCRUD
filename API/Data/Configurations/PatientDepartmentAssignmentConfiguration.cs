@@ -24,7 +24,7 @@ public class PatientDepartmentAssignmentConfiguration : IEntityTypeConfiguration
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(a => a.Department)
-            .WithMany()
+            .WithMany(d => d.PatientDepartmentAssignments)
             .HasForeignKey(a => a.DepartmentId)
             .OnDelete(DeleteBehavior.Restrict);
 

@@ -95,3 +95,7 @@ ipch/
 
 # Local environment variables
 .env
+
+/API/hospital.db
+/API/hospital.db-shm
+/API/hospital.db-wal

@@ -1,61 +1,50 @@
-using System;
-using Microsoft.AspNetCore.Mvc;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
 using API.DTOs;
+using Microsoft.AspNetCore.Mvc;
 
-namespace API.Controllers
+[ApiController]
+[Route("api/patients")]
+public class PatientsController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class PatientsController : ControllerBase
+    private readonly PatientService _service;
+
+    public PatientsController(PatientService service)
     {
-        private readonly ILogger<PatientsController> _logger;
+        _service = service;
+    }
 
-        public PatientsController(ILogger<PatientsController> logger)
-        {
-            _logger = logger;
-        }
+    [HttpGet]
+    public async Task<ActionResult<List<PatientDto>>> GetAll()
+    {
+        var patients = await _service.GetAllAsync();
+        return Ok(patients);
+    }
 
-        [HttpGet]
-        public IEnumerable<PatientDTO> Get()
-        {
-            var result = new List<PatientDTO>() {
-                new PatientDTO {
-                    PatientName = "Mustermann, Max",
-                    AdmissionNumber = "88783/1"
-                }, new PatientDTO {
-                    PatientName = "Walter, Ken",
-                    AdmissionNumber = "46213/2"
-                }
-            };
+    [HttpGet("{admissionNumber}")]
+    public async Task<ActionResult<PatientDto>> GetByNumber(string admissionNumber)
+    {
+        var patient = await _service.GetByAdmissionNumberAsync(admissionNumber);
+        if (patient == null) return NotFound();
+        return Ok(patient);
+    }
 
-            return result;
-        }
+    [HttpPost]
+    public async Task<ActionResult<PatientDto>> Create([FromBody] CreatePatientDto dto)
+    {
+        var created = await _service.CreateAsync(dto);
+        return CreatedAtAction(nameof(GetByNumber), new { admissionNumber = created.AdmissionNumber }, created);
+    }
 
-        [HttpGet("{id}")]
-        public PatientDTO Get(int id)
-        {
-            return new PatientDTO
-            {
-                PatientName = "Mustermann, Max",
-                AdmissionNumber = "88783/1"
-            };
-        }
+    [HttpPut("{admissionNumber}")]
+    public async Task<IActionResult> Update(string admissionNumber, [FromBody] UpdatePatientDto dto)
+    {
+        await _service.UpdateAsync(admissionNumber, dto);
+        return NoContent();
+    }
 
-        [HttpPost]
-        public void Post([FromBody] PatientDTO value)
-        {
-        }
-
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] PatientDTO value)
-        {
-        }
-
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+    [HttpDelete("{admissionNumber}")]
+    public async Task<IActionResult> Delete(string admissionNumber)
+    {
+        await _service.DeleteAsync(admissionNumber);
+        return NoContent();
     }
 }

@@ -1,9 +1,10 @@
 namespace API;
 
+using Mapster;
+using API.Data;
+using API.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-
-using API.Data;
 
 public class Program
 {
@@ -14,14 +15,17 @@ public class Program
 
         // Add services to the container.
 
-        builder.Services.AddControllers();
-
         builder.Services.AddDbContext<HospitalDbContext>(options =>
             options.UseSqlite($"Data Source=hospital.db"));
 
+        builder.Services.AddScoped<PatientService>();
+        builder.Services.AddScoped<DepartmentService>();
+
+        builder.Services.AddMapster();
+
+        builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-
 
         var app = builder.Build();
 

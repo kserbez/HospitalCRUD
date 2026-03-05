@@ -1,7 +1,6 @@
 ﻿namespace API.DTOs;
-public class DepartmentDto
+public class CreateDepartmentDto
 {
-    public int Id { get; set; }
     public string ShortName { get; set; } = null!;
     public string LongName { get; set; } = null!;
 }
