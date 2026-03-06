@@ -47,4 +47,11 @@ public class PatientsController : ControllerBase
         await _service.DeleteAsync(admissionNumber);
         return NoContent();
     }
+
+    [HttpPost("{admissionNumber}/transfer")]
+    public async Task<IActionResult> Transfer(string admissionNumber, [FromBody] TransferPatientDto dto)
+    {
+        await _service.TransferAsync(admissionNumber, dto);
+        return NoContent();
+    }
 }

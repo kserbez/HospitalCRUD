@@ -59,10 +59,10 @@ public class DepartmentService
             if (await _context.Departments.AnyAsync(d => d.ShortName == dto.ShortName, ct))
                 throw new InvalidOperationException($"ShortName '{dto.ShortName}' already in use");
 
-            department.ShortName = dto.ShortName;
+            department.ChangeShortName(dto.ShortName);
         }
 
-        department.LongName = dto.LongName;
+        department.ChangeLongName(dto.LongName);
 
         await _context.SaveChangesAsync(ct);
     }
@@ -81,5 +81,18 @@ public class DepartmentService
 
         _context.Departments.Remove(department);
         await _context.SaveChangesAsync(ct);
+    }
+
+    public async Task<List<PatientDto>> GetPatientsOnDateAsync(string shortName, DateOnly date, CancellationToken ct = default)
+    {
+        var patients = await _context.PatientDepartmentAssignments
+            .Where(a => a.Department.ShortName == shortName && a.AssignmentDate == date)
+            .Select(a => a.Patient)
+            .Distinct()
+            .Include(p => p.CurrentDepartment)
+            .AsNoTracking()
+            .ToListAsync(ct);
+
+        return patients.Adapt<List<PatientDto>>();
     }
 }

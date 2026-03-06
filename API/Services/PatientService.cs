@@ -85,4 +85,33 @@ public class PatientService
         _context.Patients.Remove(patient);
         await _context.SaveChangesAsync(ct);
     }
+
+    public async Task TransferAsync(string admissionNumber, TransferPatientDto dto, CancellationToken ct = default)
+    {
+        admissionNumber = Uri.UnescapeDataString(admissionNumber);
+
+        var patient = await _context.Patients
+            .Include(p => p.CurrentDepartment)
+            .FirstOrDefaultAsync(p => p.AdmissionNumber == admissionNumber, ct)
+            ?? throw new KeyNotFoundException($"Patient not found");
+
+        var targetDepartment = await _context.Departments
+            .FirstOrDefaultAsync(d => d.ShortName == dto.DepartmentShortName, ct)
+            ?? throw new KeyNotFoundException($"Department {dto.DepartmentShortName} not found");
+
+        var assignmentDate = dto.AssignmentDate ?? DateOnly.FromDateTime(DateTime.UtcNow);
+
+        if (patient.CurrentDepartmentId == targetDepartment.Id)
+            throw new InvalidOperationException("Patient is already in this department");
+
+        var newAssignment = PatientDepartmentAssignment.Create(
+            patient,
+            targetDepartment,
+            assignmentDate);
+
+        patient.CurrentDepartmentId = targetDepartment.Id;
+
+        _context.PatientDepartmentAssignments.Add(newAssignment);
+        await _context.SaveChangesAsync(ct);
+    }
 }

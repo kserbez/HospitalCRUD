@@ -21,5 +21,10 @@ public class DepartmentConfiguration : IEntityTypeConfiguration<Department>
         builder.Property(d => d.LongName)
             .HasMaxLength(150)
             .IsRequired();
+
+        builder.HasMany(d => d.PatientDepartmentAssignments)
+               .WithOne(a => a.Department)
+               .HasForeignKey(a => a.DepartmentId)
+               .OnDelete(DeleteBehavior.Restrict);
     }
 }

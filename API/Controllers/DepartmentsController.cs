@@ -53,4 +53,11 @@ public class DepartmentsController : ControllerBase
         await _service.DeleteAsync(shortName);
         return NoContent();
     }
+
+    [HttpGet("{shortName}/patients")]
+    public async Task<ActionResult<List<PatientDto>>> GetPatientsOnDate(string shortName, [FromQuery] DateOnly date)
+    {
+        var patients = await _service.GetPatientsOnDateAsync(shortName, date);
+        return Ok(patients);
+    }
 }
