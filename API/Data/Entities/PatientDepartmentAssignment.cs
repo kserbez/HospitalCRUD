@@ -12,12 +12,11 @@
 
         public DateOnly AssignmentDate { get; private set; }
 
+        public DateOnly? LeftDate { get; private set; }
+
         private PatientDepartmentAssignment() { }
 
-        public static PatientDepartmentAssignment Create(
-            Patient patient,
-            Department department,
-            DateOnly assignmentDate)
+        public static PatientDepartmentAssignment Create(Patient patient, Department department, DateOnly assignmentDate)
         {
             return new PatientDepartmentAssignment
             {
@@ -25,8 +24,19 @@
                 Patient = patient,
                 DepartmentId = department.Id,
                 Department = department,
-                AssignmentDate = assignmentDate
+                AssignmentDate = assignmentDate,
+                LeftDate = null
             };
+        }
+        public void Leave(DateOnly leftDate)
+        {
+            if (LeftDate != null)
+                throw new InvalidOperationException("Assignment already closed");
+
+            if (leftDate < AssignmentDate)
+                throw new InvalidOperationException("Left date cannot be before assignment date");
+
+            LeftDate = leftDate;
         }
     }
 }

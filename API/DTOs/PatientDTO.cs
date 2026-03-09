@@ -1,4 +1,8 @@
 ﻿namespace API.DTOs;
+
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+
 public class PatientDto
 {
     public string AdmissionNumber { get; set; } = null!;

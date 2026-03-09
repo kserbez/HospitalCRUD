@@ -3,7 +3,7 @@
 using API.DTOs;
 using API.Services;
 using Microsoft.AspNetCore.Mvc;
-
+using System.ComponentModel.DataAnnotations;
 
 [ApiController]
 [Route("api/departments")]
@@ -24,7 +24,7 @@ public class DepartmentsController : ControllerBase
     }
 
     [HttpGet("{shortName}")]
-    public async Task<ActionResult<DepartmentDto>> GetByShortName(string shortName)
+    public async Task<ActionResult<DepartmentDto>> GetByShortName([Required] string shortName)
     {
         var department = await _service.GetByShortNameAsync(shortName);
         if (department is null)
@@ -41,14 +41,14 @@ public class DepartmentsController : ControllerBase
     }
 
     [HttpPut("{shortName}")]
-    public async Task<IActionResult> Update(string shortName, [FromBody] UpdateDepartmentDto dto)
+    public async Task<IActionResult> Update([Required] string shortName, [FromBody] UpdateDepartmentDto dto)
     {
         await _service.UpdateAsync(shortName, dto);
         return NoContent();
     }
 
     [HttpDelete("{shortName}")]
-    public async Task<IActionResult> Delete(string shortName)
+    public async Task<IActionResult> Delete([Required] string shortName)
     {
         await _service.DeleteAsync(shortName);
         return NoContent();

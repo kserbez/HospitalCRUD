@@ -1,13 +1,100 @@
-@API_HostAddress = http://localhost:5282
+@API_HostAddress = https://localhost:44355
 
-GET {{API_HostAddress}}/Patients/
+### Get all patients
+GET {{API_HostAddress}}/api/patients
 Accept: application/json
 
 ###
 
-
-GET {{API_HostAddress}}/Patients/
+### Get patient by admission number
+GET {{API_HostAddress}}/api/patients/by-admission?admissionNumber=R33445/26
 Accept: application/json
 
+###
+
+### Create patient
+POST {{API_HostAddress}}/api/patients
+Content-Type: application/json
+
+{
+  "admissionNumber": "C53455/14",
+  "patientName": "Claus, Mitzig",
+  "departmentShortName": "GAST"
+}
 
 ###
+
+### Update patient
+PUT {{API_HostAddress}}/api/patients/by-admission?admissionNumber=C53455/14
+Content-Type: application/json
+
+{
+  "patientName": "Claus, Mitzig Updated"
+}
+
+###
+
+### Delete patient
+DELETE {{API_HostAddress}}/api/patients/by-admission?admissionNumber=C53455/14
+
+###
+
+### Transfer patient to another department
+POST {{API_HostAddress}}/api/patients/transfer-by-admission?admissionNumber=R33445/26
+Content-Type: application/json
+
+{
+  "departmentShortName": "GAST",
+  "assignmentDate": "2026-03-09"
+}
+
+###
+
+
+
+
+### Get all departments
+GET {{API_HostAddress}}/api/departments
+Accept: application/json
+
+###
+
+### Get department by short name
+GET {{API_HostAddress}}/api/departments/GAST
+Accept: application/json
+
+### Create department
+POST {{API_HostAddress}}/api/departments
+Content-Type: application/json
+
+{
+  "shortName": "CARD2",
+  "longName": "Cardiology"
+}
+
+###
+
+### Update department
+PUT {{API_HostAddress}}/api/departments/CHIR
+Content-Type: application/json
+
+{
+  "shortName": "CHIR",
+  "longName": "CHIR Name"
+}
+
+###
+
+### Delete department
+DELETE {{API_HostAddress}}/api/departments/CARD2
+
+###
+
+### Get patients assigned to department on date
+GET {{API_HostAddress}}/api/departments/KARD/patients?date=2026-02-20
+Accept: application/json
+
+###
+
+### Health check / root
+# GET {{API_HostAddress}}/api/

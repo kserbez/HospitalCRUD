@@ -10,13 +10,11 @@ public class Program
 {
     public static void Main(string[] args)
     {
-
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
-
         builder.Services.AddDbContext<HospitalDbContext>(options =>
-            options.UseSqlite($"Data Source=hospital.db"));
+            options.UseSqlite(builder.Configuration.GetConnectionString("HospitalDbConnectionString")));
 
         builder.Services.AddScoped<PatientService>();
         builder.Services.AddScoped<DepartmentService>();

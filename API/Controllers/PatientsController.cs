@@ -1,5 +1,10 @@
-using API.DTOs;
+namespace API.Controllers;
+
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
+
+using API.DTOs;
+using API.Services;
 
 [ApiController]
 [Route("api/patients")]
@@ -19,11 +24,14 @@ public class PatientsController : ControllerBase
         return Ok(patients);
     }
 
-    [HttpGet("{admissionNumber}")]
-    public async Task<ActionResult<PatientDto>> GetByNumber(string admissionNumber)
+    [HttpGet("by-admission")]
+    public async Task<ActionResult<PatientDto>> GetByAdmissionNumber([FromQuery, Required] string admissionNumber)
     {
         var patient = await _service.GetByAdmissionNumberAsync(admissionNumber);
-        if (patient == null) return NotFound();
+
+        if (patient == null)
+            return NotFound();
+
         return Ok(patient);
     }
 
@@ -31,27 +39,63 @@ public class PatientsController : ControllerBase
     public async Task<ActionResult<PatientDto>> Create([FromBody] CreatePatientDto dto)
     {
         var created = await _service.CreateAsync(dto);
-        return CreatedAtAction(nameof(GetByNumber), new { admissionNumber = created.AdmissionNumber }, created);
+        return CreatedAtAction(nameof(GetByAdmissionNumber), new { admissionNumber = created.AdmissionNumber }, created);
     }
 
-    [HttpPut("{admissionNumber}")]
-    public async Task<IActionResult> Update(string admissionNumber, [FromBody] UpdatePatientDto dto)
+    [HttpPut("by-admission")]
+    public async Task<IActionResult> Update([FromQuery, Required] string admissionNumber, [FromBody] UpdatePatientDto dto)
     {
-        await _service.UpdateAsync(admissionNumber, dto);
+        try
+        {
+            await _service.UpdateAsync(admissionNumber, dto);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch
+        {
+            return BadRequest("An unexpected error occured");
+        }
+
         return NoContent();
     }
 
-    [HttpDelete("{admissionNumber}")]
-    public async Task<IActionResult> Delete(string admissionNumber)
+    [HttpDelete("by-admission")]
+    public async Task<IActionResult> Delete([FromQuery, Required] string admissionNumber)
     {
-        await _service.DeleteAsync(admissionNumber);
+        try
+        {
+            await _service.DeleteAsync(admissionNumber);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch
+        {
+            return BadRequest("An unexpected error occured");
+        }
+
         return NoContent();
     }
 
-    [HttpPost("{admissionNumber}/transfer")]
-    public async Task<IActionResult> Transfer(string admissionNumber, [FromBody] TransferPatientDto dto)
+    [HttpPost("transfer-by-admission")]
+    public async Task<IActionResult> Transfer([FromQuery, Required] string admissionNumber, [FromBody] TransferPatientDto dto)
     {
-        await _service.TransferAsync(admissionNumber, dto);
+        try
+        {
+            await _service.TransferAsync(admissionNumber, dto);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch
+        {
+            return BadRequest("An unexpected error occured");
+        }
+
         return NoContent();
     }
 }
