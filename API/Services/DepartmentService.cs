@@ -86,7 +86,7 @@ public class DepartmentService
     public async Task<List<PatientDto>> GetPatientsOnDateAsync(string shortName, DateOnly date, CancellationToken ct = default)
     {
         var patients = await _context.PatientDepartmentAssignments
-            .Where(a => a.Department.ShortName == shortName && a.AssignmentDate == date)
+            .Where(a => a.Department.ShortName == shortName && a.AssignmentDate <= date && a.LeftDate >= date)
             .Select(a => a.Patient)
             .Distinct()
             .Include(p => p.CurrentDepartment)

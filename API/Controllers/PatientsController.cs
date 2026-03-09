@@ -35,6 +35,27 @@ public class PatientsController : ControllerBase
         return Ok(patient);
     }
 
+
+
+    [HttpGet("history")]
+    public async Task<ActionResult<List<PatientHistoryDTO>>> GetHistory([FromQuery, Required] string admissionNumber)
+    {
+        try
+        {
+            return await _service.GetHistory(admissionNumber);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch
+        {
+            return BadRequest("An unexpected error occured");
+        }
+
+        return NoContent();
+    }
+
     [HttpPost]
     public async Task<ActionResult<PatientDto>> Create([FromBody] CreatePatientDto dto)
     {
@@ -98,4 +119,5 @@ public class PatientsController : ControllerBase
 
         return NoContent();
     }
+
 }

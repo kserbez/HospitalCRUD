@@ -3,6 +3,7 @@ using API.Data.Entities;
 using API.DTOs;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 
 public class PatientService
 {
@@ -31,6 +32,27 @@ public class PatientService
             .FirstOrDefaultAsync(p => p.AdmissionNumber == admissionNumber, ct);
 
         return patient?.Adapt<PatientDto>();
+    }
+
+    public async Task<List<PatientHistoryDTO>> GetHistory(string admissionNumber)
+    {
+        var exists = await _context.Patients
+            .AnyAsync(p => p.AdmissionNumber == admissionNumber);
+
+        if (!exists)
+            throw new KeyNotFoundException($"Patient {admissionNumber} not found");
+
+        return await _context.PatientDepartmentAssignments
+            .Where(a => a.PatientAdmissionNumber == admissionNumber)
+            .OrderBy(a => a.AssignmentDate)
+            .Select(a => new PatientHistoryDTO
+            {
+                AdmissionNumber = a.PatientAdmissionNumber,
+                DepartmentShortName = a.Department.ShortName,
+                AssignedAt = a.AssignmentDate
+            })
+            .AsNoTracking()
+            .ToListAsync();
     }
 
     public async Task<PatientDto> CreateAsync(CreatePatientDto dto, CancellationToken ct = default)
